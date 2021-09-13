@@ -1,0 +1,25 @@
+{% extends 'pages/home.html' %}
+{% load widget_tweaks %}
+{% block home %}
+    <h3>Create a new community</h3>
+    <form action="{% url 'payment:create_community' %}" method="post">
+    {% csrf_token %}
+    {% for field in form.visible_fields  %}
+        <div class="form-group">
+        <label class="label">{{field.label}}</label>
+        {% render_field field class="form-control" %}
+        <span class="text-muted">{{ field.help_text }}</span>
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        {% endif %} 
+        </div>
+    {% endfor %}
+    <div class="row">
+         <input type="submit" class="btn btn-success col-md-6">
+         <input type="reset" class="btn btn-minimize col-md-6">
+    </div>
+
+    </form>
+{% endblock %}

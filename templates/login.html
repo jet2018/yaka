@@ -1,0 +1,57 @@
+<div class="login-img3-body container">
+
+<form class="login-form" id="signin" action="{% url 'payment:login' %}" method="post" style="display: block; margin-bottom: 128px !important; margin-top: 50px !important;" action="index.html">
+{% csrf_token %}
+    <div class="login-wrap">
+        <p class="login-img"><i class="icon_lock_alt"></i></p>
+        <div class="input-group">
+          <span class="input-group-addon"><i class="icon_profile"></i></span>
+          <input type="text" class="form-control" name="username" placeholder="Username" autofocus>
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon"><i class="icon_key_alt"></i></span>
+          <input type="password" name="password" class="form-control" placeholder="Password">
+        </div>
+        <label class="checkbox">
+{#                <input type="checkbox" value="remember-me"> Remember me#}
+{#                <span class="pull-right"> <a href="#"> Forgot Password?</a></span>#}
+            </label>
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+        <button class="btn btn-info btn-lg btn-block" id="signupbtn" type="button">Signup</button>
+      </div>
+</form>
+
+{#    signup#}
+
+    <form class="login-form" id="signup" method="post"  style="display: none; margin-bottom: 30px !important; margin-top: 20px !important;" action="{% url 'payment:register' %}">
+      {% csrf_token %}
+        <div class="login-wrap">
+        <p class="login-img"><i class="icon_lock_alt"></i></p>
+        <div class="input-group">
+          <span class="input-group-addon"><i class="icon_profile"></i></span>
+          <input type="text" name="username" class="form-control" placeholder="Username" autofocus>
+        </div>
+          <div class="input-group">
+          <span class="input-group-addon"><i class="fa fa-user-circle-o"></i></span>
+          <input type="text" class="form-control" name="first_name" placeholder="First name" autofocus>
+        </div>
+          <div class="input-group">
+          <span class="input-group-addon"><i class="fa fa-user-circle"></i></span>
+          <input type="text" class="form-control" name="last_name" placeholder="Last name" autofocus>
+        </div>
+          <div class="input-group">
+          <span class="input-group-addon"><i class="fa fa-google"></i></span>
+          <input type="text" class="form-control" name="email" placeholder="email" autofocus>
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon"><i class="icon_key_alt"></i></span>
+          <input type="password" name="password" class="form-control" placeholder="Password">
+        </div>
+
+           <button class="btn btn-info btn-lg btn-block" type="submit">Signup</button>
+          <button class="btn btn-info btn-lg btn-block" id="loginbtn" type="button">Login</button>
+
+
+      </div>
+</form>
+</div>

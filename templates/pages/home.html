@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+ {% block css %}
+     <style>
+
+     </style>
+ {% endblock css %}
+
+{% block content %}
+<div class="row">
+
+    <div class="col-md-9" style="color: #fff;" id="default-bg">
+    {% block home %}
+       <h1 style="padding-top: 60px">Welcome, {{ user.username|capfirst }}</h1>
+        <div>
+            <h1 class="pt-5">To <span class="text-warning">LIGHT</span><span class="text-info">US</span></h1>
+            <article style="padding-top: 50px; padding-bottom: 50px">
+                <p class="h2">We connect communities together to share electricity</p>
+                <p class="h3"> Don't burn out,</p>
+                <p class="h3" style="padding-top:10px;"> <span class="h1 text-info">Sell</span> those extra units you are not using or </p>
+                <p class="h3" style="padding-top:10px;"> <span class="h1 text-primary">Buy</span> from your nearest neighbour </p>
+            </article>
+        </div>
+        {% endblock %}
+    </div>
+
+    <div class="col-md-3 float-end">
+        <div class="info-box blue-bg">
+              <i class="fa fa-cubes"></i>
+              <div class="count" id="count">{{user.profile.units}}</div>
+              <div class="title">Current Units</div>
+        </div>
+        <div class="info-box blue-bg">
+            <h3>Add on your unit stock</h3>
+            <form action="{% url 'payment:update_units' %}" id="update_units" method="post">
+                {% csrf_token %}
+                <label for="units">Units(float supported)</label>
+                <input type="number" name="units" step="0.1" class="form-control">
+                <input type="submit"  value="Add Units" style="float: end !important;" class="float-right text-light btn-user btn-sm btn-success">
+            </form>
+        </div>
+
+        <div class="info-box blue-bg">
+            <h3>You can join a community or create your own</h3>
+            <div class="row">
+                <a class="col-md-6 btn btn-info" href="{% url 'payment:all_communities' %}">Join one</a>
+                <a href="{% url 'payment:create_community' %}" class="col-md-6 btn btn-primary">Create one</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $('#update_units').submit(function (e) {
+            e.preventDefault()
+            var url = $(this).attr('action')
+            var data= $(this).serialize()
+            $.ajax({
+                url:url,
+                data:data, 
+                type: 'post',
+                success: function (res) {
+                    $('#count').text(res.units)
+                    $('#update_units').trigger('reset')
+                }
+            })
+        })
+
+    </script>
+
+{% endblock %}

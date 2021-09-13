@@ -1,0 +1,42 @@
+{% extends 'pages/home.html' %}
+
+{% block home %}
+       <section class="panel">
+              <header class="panel-heading">
+                All available communities
+              </header>
+
+              <table class="table table-striped bg-none table-advance table-hover">
+                <tbody>
+
+                  <tr>
+                    <th><i class="icon_profile"></i> Community</th>
+                    <th><i class="icon_pin_alt"></i> Address</th>
+                    <th><i class="icon_mobile"></i> Members</th>
+                    <th><i class="icon_calendar"></i> Created on</th>
+                    <th><i class="icon_cogs"></i> Action</th>
+                  </tr>
+                  {% for community in communities %}
+                  <tr class="text-info">
+                    <td>{{ community.name }}</td>
+                    <td>{{ community.village }}, {{ community.subcounty }}, {{ community.district }}, {{ community.country }}</td>
+                    <td>{{ community.total_members }}</td>
+                    <td>{{ community.created_on }}</td>
+                    <td>
+                      <div class="btn-group">
+                        <a class="btn btn-primary" title="View more" href="#"><i class="fa fa-eye"></i></a>
+                          {% if community.created_by != user%}
+                            <a class="btn btn-success" title="Join community"  href=""><i class="icon_folder-add"></i> Join</a>
+                          {% endif %}
+                      </div>
+                    </td>
+                  </tr>
+                  {% empty %}
+                      <div class="text-danger">No communities found!</div>
+                    {% endfor %}
+                </tbody>
+              </table>
+            </section>
+
+
+{% endblock %}
