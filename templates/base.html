@@ -122,7 +122,7 @@
             <ul class="dropdown-menu extended logout">
               <div class="log-arrow-up"></div>
               <li class="eborder-top">
-                <a href="#"><i class="icon_profile"></i> My Profile</a>
+                <a href="{% url 'payment:profile' %}"><i class="icon_profile"></i> My Profile</a>
               </li>
               <li>
                 <a href="{% url 'payment:logout' %}"><i class="icon_key_alt"></i> Log Out</a>
@@ -160,7 +160,7 @@
                       </a>
           </li>
              <li class="active">
-            <a class="" href="index.html">
+            <a class="" href="{% url 'payment:profile' %}">
                           <i class="fa fa-user-circle"></i>
                           <span>My profile</span>
                       </a>

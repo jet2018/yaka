@@ -7,7 +7,7 @@ from django.views.generic import UpdateView, DetailView, DeleteView, CreateView,
 from django.shortcuts import render, redirect
 
 # Create your views here.
-# TODO 1. create an acount  
+# TODO 1. create an acount
 # TODO 2. Login
 # TODO 3. Forgot Password ***
 # TODO 4. Setup profile
@@ -24,6 +24,7 @@ from payments.models import Community
 class Dashboard(TemplateView):
     template_name = "pages/home.html"
 
+
 def create_account(request):
     if request.is_ajax():
         username = request.POST.get("username")
@@ -33,26 +34,31 @@ def create_account(request):
         password = request.POST.get("password")
 
         # create user
-        check_for_username = User.objects.filter(username = username)
-        check_for_email = User.objects.filter(email = email)
+        check_for_username = User.objects.filter(username=username)
+        check_for_email = User.objects.filter(email=email)
         if check_for_username.exists():
-            messages.error(request, message="Username already taken", extra_tags="text-light alert alert-danger")
+            messages.error(request, message="Username already taken",
+                           extra_tags="text-light alert alert-danger")
             return JsonResponse({"error": "Username already taken"})
         elif check_for_email.exists():
-            messages.error(request, message="Email already taken", extra_tags="text-light alert alert-danger")
+            messages.error(request, message="Email already taken",
+                           extra_tags="text-light alert alert-danger")
             return JsonResponse({"error": "Email already taken"})
-        elif last_name =="" or first_name == "":
-            messages.error(request, message="First and last name are required", extra_tags="text-light alert alert-danger")
-            return JsonResponse({"error":"First and last name are required"})
+        elif last_name == "" or first_name == "":
+            messages.error(request, message="First and last name are required",
+                           extra_tags="text-light alert alert-danger")
+            return JsonResponse({"error": "First and last name are required"})
         else:
-            user = User.objects.create_user(username = username, password=password, email = email, first_name = first_name, last_name = last_name)
+            user = User.objects.create_user(
+                username=username, password=password, email=email, first_name=first_name, last_name=last_name)
             user.save()
             # return from here
-            user_now = auth.authenticate(username = username, password = password)
+            user_now = auth.authenticate(username=username, password=password)
             if user_now is not None:
                 auth.login(request, user)
                 messages.success(request, "You have logged in successfully.")
                 return JsonResponse({"success": "Session started successfully"}, safe=False)
+
 
 def login(request):
     if request.is_ajax():
@@ -62,14 +68,46 @@ def login(request):
         if username == "" or password == "":
             return JsonResponse({"error": "Username and password are required."}, safe=False)
         else:
-            login_attempt = auth.authenticate(username = username, password = password)
+            login_attempt = auth.authenticate(
+                username=username, password=password)
             if login_attempt is not None:
                 auth.login(request, login_attempt)
                 messages.success(request, "You have logged in successfully.")
                 return JsonResponse({"success": "Session started successfully"}, safe=False)
             else:
-                messages.error(request, "No user is associated with these credentials.")
+                messages.error(
+                    request, "No user is associated with these credentials.")
                 return JsonResponse({"error": "No user is associated with these credentials."}, safe=False)
+
+
+@login_required(login_url='payment:home')
+def Join_Community(request, pk):
+    user = request.user
+    community = Community.objects.get(pk=pk)
+    community.members.add(user)
+    messages.success(
+        request, message="You have joined %s community successfully" % community.name)
+    return redirect("payment:community_mine")
+
+
+@login_required(login_url='payment:home')
+def Quit_Community(request, pk):
+    user = request.user
+    community = Community.objects.get(pk=pk)
+    community.members.remove(user)
+    messages.success(
+        request, message="You have quit %s community successfully" % community.name)
+    return redirect("payment:community_mine")
+
+
+class CommunityDetailView(LoginRequiredMixin, DetailView):
+    """
+        View the details of one Community
+    """
+    login_url = 'payment:home'
+    template_name = "pages/single_community.html"
+    context_object_name = "community"
+    queryset = Community.objects.all()
 
 
 @login_required(login_url='payment:home')
@@ -88,8 +126,9 @@ class CommunityView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['created'] = Community.objects.filter(created_by = self.request.user)
-        context['joined'] =self.request.user.community_set.all()
+        context['created'] = Community.objects.filter(
+            created_by=self.request.user)
+        context['joined'] = self.request.user.community_set.all()
         return context
 
 
@@ -114,9 +153,8 @@ class CreateCommunity(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         # attach curently logged in user as the creater
-        form.instance.created_by =  self.request.user
+        form.instance.created_by = self.request.user
         return super().form_valid(form)
-
 
 
 class UpdateCommunity(LoginRequiredMixin, UpdateView):
@@ -138,9 +176,10 @@ class UpdateCommunity(LoginRequiredMixin, UpdateView):
 @login_required(login_url='payment:home')
 def delete_community(request, pk):
     try:
-        community = Community.objects.get(pk = pk)
+        community = Community.objects.get(pk=pk)
         if community.created_by != request.user:
-            messages.error(request, message="You have no permissions to do this action")
+            messages.error(
+                request, message="You have no permissions to do this action")
             return redirect("payment:community_mine")
 
         community.delete()
@@ -162,6 +201,8 @@ def Logout(request):
         return redirect(request.path_info)
 
 
-class ProfileUpdate(UpdateView):
-    #
-    pass
+def profileView(request):
+    if request.method == "POST" or request.is_ajax():
+        pass
+        # perform form submissioins here
+    return render(request, "pages/profile.html")

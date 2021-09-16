@@ -1,0 +1,69 @@
+{% extends 'pages/home.html' %}
+
+{% block home %}
+<h1>Basic</h1>
+    <form action="" class="form" style="border: solid blue; padding: 10px;">
+    <div class="row form-group">
+    <div class="col-md-6">
+        <label for="first_name">First name</label>
+        <input type="text" value="{{ user.first_name }}" placeholder="Enter first name" name="first_name" class="form-control">
+        </div>
+    <div class="col-md-6">
+        <label for="last_name">Last name</label>
+        <input type="text" value="{{ user.last_name }}" placeholder="Enter last name" name="last_name" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+        <label for="username">Username</label>
+        <input type="text" value="{{ user.username }}" placeholder="Create your fancy username" name="username" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+        <label for="email">Email</label>
+        <input type="email" value="{{ user.email }}" placeholder="Enter your email" name="email" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+        <input type="submit" class="btn btn-block btn-info" style="margin-top: 20px;" value="Update">
+        </div>
+        <div class="col-md-6">
+        <input type="reset" class="btn btn-block btn-danger" style="margin-top: 20px;" value="Reset">
+        </div>
+        </div>
+
+    </form>
+
+
+    <h1>Security</h1>
+    <form action="" class="form" style="border: solid brown; padding: 10px;">
+    <div class="row form-group">
+    <div class="col-md-6">
+        <label for="password_old">Old password</label>
+        <input type="password" placeholder="Enter your current password" name="password_old" class="form-control">
+        </div>
+
+         <div class="col-md-6">
+        <label for="password_new">New password</label>
+        <input type="password" placeholder="Create your new password" name="password_new" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+        <label for="password_confirm">Confirm password</label>
+        <input type="password" placeholder="Confirm your new password" name="password_confirm" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+        <input type="submit" class="btn btn-block btn-info" style="margin-top: 20px;" value="Update">
+        </div>
+        </div>
+    </form>
+
+    <h1>Danger zone</h1>
+    <div class="row" style="border: solid red; padding: 10px;">
+    <div class="col-md-12">
+        <p>Deactivate account, this is a reversible action and you can contact the administrators to reactivate it!</p>
+        <button class="btn btn-sm" style="float: end;">Deactivate</button>
+    </div>
+    </div>
+
+{% endblock %}

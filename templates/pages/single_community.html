@@ -1,0 +1,150 @@
+{% extends 'pages/home.html' %} {% load static %} {% load humanize %} {% block home %}
+<div class="row">
+    <!-- profile-widget -->
+    <div class="col-lg-12">
+        <div class="profile-widget profile-widget-info">
+            <div class="panel-body">
+                <div class="col-lg-2 col-sm-2">
+                    <h4>{{community.created_by.get_full_name}}</h4>
+                    <div class="follow-ava">
+                        <img {% if community.created_by.profile.dp %} src="{{community.created_by.profile.dp.url}}" {% else %} src="{% static 'img/profile_holder.png' %}" {% endif %}alt="">
+                    </div>
+                    <h6>Administrator</h6>
+                </div>
+                <div class="col-lg-4 col-sm-4 follow-info">
+                    <p>Join {{community.name|capfirst}} community that brings together clients in {{community.village}} of {{community.sub_county}} in {{community.district}}, {{community.country}}</p>
+
+                    <h6>
+                        <span><i class="icon_clock_alt"></i>Created: {{community.created_on|naturaltime}}</span>
+                    </h6>
+                </div>
+                <div class="col-lg-6 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+
+                            <i class="fa fa-users fa-2x"> </i><br>
+                            <h4 class="text-center">Total members</h4> {{community.total_members}}
+                        </li>
+
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- page start-->
+<div class="row">
+    <div class="col-lg-12">
+        <section class="panel">
+            <header class="panel-heading tab-bg-info">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" href="#recent-activity">
+                            <i class="icon-home"></i> Members
+                        </a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#profile">
+                            <i class="icon-user"></i> About
+                        </a>
+                    </li>
+                </ul>
+            </header>
+            <div class="panel-body">
+                <div class="tab-content">
+                    <div id="recent-activity" class="tab-pane active">
+                        <div class="profile-activity">
+                        	{% for us in community.members.all %}
+                            <div class="act-time">
+                                <div class="activity-body act-in">
+                                    <span class="arrow"></span>
+                                    <div class="text">
+                                        <a href="#" class="activity-img">
+                                        	<img class="avatar" {% if us.profile.dp %} src="{{us.profile.dp.url}}" {% else %} src="{% static 'img/profile_holder.png' %}" {% endif %} alt=""></a>
+                                        {% if request.user.email and request.user.profile.account_number %}
+                                            <button style="float:right;" class="btn-sm btn">Buy units</button>
+                                            {% else %}
+                                            <a style="float:right;" class="btn-sm btn">Finish profile first</a>
+                                        {% endif %}
+                                        <p class="attribution text-info"><a>{{us.get_full_name}}</a> Total units: {{us.profile.units}}</p>
+                                        <p class="text-info">
+                                        	<strong>From: {% if us.profile.address %} {{us.profile.address}} {% else %} Unknown address.{% endif %}</strong><br>
+{#                                        	<input type="number" id="units" step="0.1" max="{{us.profile.units}}" min="0.1" value="{{us.profile.units}}" name="">#}
+                                            <button type="button" class="btn" onclick="decrease()" id="decrease">-</button> <span data-id="{{ us.profile.units }}" id="units">{{ us.profile.units }}</span>  <button onclick="increase()" class="btn" id="increase" type="button">+</button> <span class="float-right text-danger" id="price"></span>
+                                        </p>
+
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <!-- profile -->
+                    <div id="profile" class="tab-pane">
+                        <section class="panel">
+                            <div class="bio-graph-heading">
+                                {{community.about|safe}}
+                            </div>
+                            
+                        </section>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock home %}
+
+ {% block scripts %}
+     <script>
+     {#$("#increase").click(function (){#}
+     {#    increase()#}
+     {#})#}
+     {##}
+     {#$("#descrease").click(function (){#}
+     {#    decrease()#}
+     {#})#}
+
+    function increase(){
+
+        var total_units = Number($("#units").data("id"))
+        var units_now = Number($("#units").text())
+        {#alert(units_now)#}
+        if (units_now >= total_units){
+            $("#units").text(String(units_now.toFixed(1)))
+        }else{
+            $("#units").text(String((units_now+0.1).toFixed(1)))
+        }
+
+         price()
+    }
+
+    function price(){
+        var units_now = Number($("#units").text())
+        var new_price = units_now * 550
+        $("#price").text("UGX. "+String(new_price))
+    }
+
+    $(window).load(function (){
+        price()
+    })
+
+
+
+    function decrease(){
+        {#var total_units = $("#units").data("id")#}
+        {#var total_units = Number($("#units").data("id"))#}
+        var units_now = Number($("#units").text())
+        if (units_now <= 0.1){
+            $("#units").text("0.1")
+        }else{
+            $("#units").text(String((units_now-0.1).toFixed(1)))
+        }
+
+         price()
+    }
+
+     </script>
+ {% endblock %}

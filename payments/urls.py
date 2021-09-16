@@ -1,6 +1,7 @@
-from django.urls import  path
-from .views import ProfileUpdate, CreateCommunity, UpdateCommunity, Dashboard, Logout, login, update_units, \
-    create_account, CommunityView, delete_community, AllCommunities
+from django.urls import path
+from .views import  CreateCommunity, UpdateCommunity, Dashboard, Logout, login, update_units, \
+    create_account, CommunityView, CommunityDetailView, delete_community, AllCommunities, Join_Community, \
+    Quit_Community, profileView
 
 app_name = 'payment'
 urlpatterns = [
@@ -10,8 +11,14 @@ urlpatterns = [
     path("register", create_account, name="register"),
     path("my-community", CommunityView.as_view(), name="community_mine"),
     path("update_units", update_units, name="update_units"),
+    path("join/<pk>", Join_Community, name="join"),
+    path("quit/<pk>", Quit_Community, name="quit"),
     path("delete_community/<pk>", delete_community, name="delete_community"),
+    path("community_details/<pk>", CommunityDetailView.as_view(),
+         name="community_details"),
     path("create_community", CreateCommunity.as_view(), name="create_community"),
-    path("update_community/<pk>", UpdateCommunity.as_view(), name="update_community"),
+    path("update_community/<pk>", UpdateCommunity.as_view(),
+         name="update_community"),
     path("all_communities", AllCommunities.as_view(), name="all_communities"),
+    path("me", profileView, name="profile"),
 ]

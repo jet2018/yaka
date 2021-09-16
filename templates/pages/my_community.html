@@ -24,7 +24,7 @@
                     <td>{{ community.created_on }}</td>
                     <td>
                       <div class="btn-group">
-                        <a class="btn btn-primary" title="View more" href="#"><i class="fa fa-eye"></i></a>
+                        <a class="btn btn-primary" title="View more" href="{% url 'payment:community_details' community.pk %}"><i class="fa fa-eye"></i></a>
                         <a class="btn btn-success" title="Update community"  href="{% url 'payment:update_community' community.pk %}"><i class="icon_pencil-edit"></i></a>
                         <a class="btn btn-danger" title="Drop community" href="{% url 'payment:delete_community' community.pk %}"><i class="icon_close_alt2"></i></a>
                       </div>
@@ -62,7 +62,7 @@
                     <td>{{ community.created_on }}</td>
                     <td>
                       <div class="btn-group">
-                        <a class="btn btn-primary" title="View more" href="#"><i class="fa fa-eye"></i></a>
+                        <a class="btn btn-primary" title="View more" href="{% url 'payment:community_details' community.pk %}"><i class="fa fa-eye"></i></a>
                       </div>
                     </td>
                   </tr>
