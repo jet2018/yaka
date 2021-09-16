@@ -1,8 +1,16 @@
 {% extends 'pages/home.html' %}
 
 {% block home %}
+    <h1>Profile picture</h1>
+    <form action="" class="form" style="border: solid forestgreen; padding: 10px;">
+    <div class="row form-group">
+        <div class="col-md-12">
+            <input type="file" @change="" accept="image/*">
+        </div>
+    </div>
+    </form>
 <h1>Basic</h1>
-    <form action="" class="form" style="border: solid blue; padding: 10px;">
+    <form action="" class="form" style="border: solid forestgreen; padding: 10px;">
     <div class="row form-group">
     <div class="col-md-6">
         <label for="first_name">First name</label>
@@ -35,7 +43,7 @@
 
 
     <h1>Security</h1>
-    <form action="" class="form" style="border: solid brown; padding: 10px;">
+    <form action="" class="form" style="border: solid greenyellow; padding: 10px;">
     <div class="row form-group">
     <div class="col-md-6">
         <label for="password_old">Old password</label>
@@ -59,11 +67,13 @@
     </form>
 
     <h1>Danger zone</h1>
-    <div class="row" style="border: solid red; padding: 10px;">
+    <div class="row " style="border: solid yellow; margin:6px;  padding: 10px;">
     <div class="col-md-12">
-        <p>Deactivate account, this is a reversible action and you can contact the administrators to reactivate it!</p>
-        <button class="btn btn-sm" style="float: end;">Deactivate</button>
+        <p>Deactivate account(recommended), this is a reversible action and you can contact the administrators to reactivate it! If this is what you are looking for, then click the button below to proceed.</p>
+        <button class="btn btn-sm btn-info" style="float: end;">Deactivate</button>
+        <br>
+        <p>If you are here that means the above did not work for you, the step below will erase irreversibly all data about entirely in our system.</p>
+        <button class="btn btn-danger btn-user">Delete account</button>
     </div>
     </div>
-
 {% endblock %}
