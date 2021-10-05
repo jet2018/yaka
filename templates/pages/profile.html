@@ -1,16 +1,38 @@
 {% extends 'pages/home.html' %}
 
 {% block home %}
+    <h1>Payments</h1>
+        <form action="{% url 'payment:update_payments' %}" class="form" method="post" style="border: solid darkblue; padding: 10px;" id="update_payments">
+            {% csrf_token %}
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <label for="address">Address</label>
+                        <input type="text" {% if user.profile.address %} value="{{ user.profile.address }}" {% endif %} required placeholder="Enter your address" name="address" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="account_number">Mobile money registered phone number</label>
+                        <input type="tel" required placeholder="Enter your phone number" {% if user.profile.account_number %} value="{{ user.profile.account_number }}" {% endif %} name="account_number" class="form-control">
+                    </div>
+                    <div class="col-md-12">
+                    <input type="submit" class="btn btn-block btn-success" style="margin-top: 20px; float: right;" {% if user.profile.account_number and user.profile.address %} value="Update payments" {% else %} value="Add payments"{% endif %}></div>
+                </div>
+            </form>
+
+
     <h1>Profile picture</h1>
-    <form action="" class="form" style="border: solid forestgreen; padding: 10px;">
-    <div class="row form-group">
+    <form action="{% url 'payment:image' %}" id="uploadFile" method="post" enctype="multipart/form-data" class="form" style="border: solid forestgreen; padding: 10px;">
+    {% csrf_token %}
+        <div class="row form-group">
         <div class="col-md-12">
-            <input type="file" @change="" accept="image/*">
+            <input type="file" id="imageField" data-id="" name="image" accept="image/*">
         </div>
     </div>
     </form>
-<h1>Basic</h1>
-    <form action="" class="form" style="border: solid forestgreen; padding: 10px;">
+
+
+    <h1>Basic</h1>
+    <form action="{% url 'payment:profile' %}" id="basic_form" class="form" method="post" style="border: solid darkblue; padding: 10px;">
+    {% csrf_token %}
     <div class="row form-group">
     <div class="col-md-6">
         <label for="first_name">First name</label>
@@ -31,11 +53,8 @@
         <input type="email" value="{{ user.email }}" placeholder="Enter your email" name="email" class="form-control">
         </div>
 
-        <div class="col-md-6">
-        <input type="submit" class="btn btn-block btn-info" style="margin-top: 20px;" value="Update">
-        </div>
-        <div class="col-md-6">
-        <input type="reset" class="btn btn-block btn-danger" style="margin-top: 20px;" value="Reset">
+        <div class="col-md-12">
+        <input type="submit" class="btn btn-block btn-success" style="margin-top: 20px; float: right;" value="Update">
         </div>
         </div>
 
@@ -43,7 +62,8 @@
 
 
     <h1>Security</h1>
-    <form action="" class="form" style="border: solid greenyellow; padding: 10px;">
+    <form action="{% url 'payment:update_password' %}" class="form" method="post" id="password_form" style="border: solid darkblue; padding: 10px;">
+    {% csrf_token %}
     <div class="row form-group">
     <div class="col-md-6">
         <label for="password_old">Old password</label>
@@ -67,13 +87,115 @@
     </form>
 
     <h1>Danger zone</h1>
-    <div class="row " style="border: solid yellow; margin:6px;  padding: 10px;">
+    <div class="row " style="border: solid darkred; margin:6px;  padding: 10px;">
     <div class="col-md-12">
         <p>Deactivate account(recommended), this is a reversible action and you can contact the administrators to reactivate it! If this is what you are looking for, then click the button below to proceed.</p>
-        <button class="btn btn-sm btn-info" style="float: end;">Deactivate</button>
+        <button class="btn btn-sm btn-info" data-url="{% url 'payment:deactivate' %}"  id="deactivate" style="float: end;">Deactivate</button>
         <br>
         <p>If you are here that means the above did not work for you, the step below will erase irreversibly all data about entirely in our system.</p>
-        <button class="btn btn-danger btn-user">Delete account</button>
+        <button class="btn btn-danger btn-user" data-url="{% url 'payment:delete_account' %}" id="deleteBtn">Delete account</button>
     </div>
     </div>
 {% endblock %}
+
+
+{% block homescripts %}
+    <script>
+    $("#basic_form").submit(function (e) {
+        e.preventDefault()
+        const url = $(this).attr("action")
+        const data = $(this).serialize()
+        $.ajax({
+            url:url,
+            type: $(this).attr("method"),
+            dataType:"json",
+            data:data,
+            success: function (res) {
+                res.success ? alert("Your user details have been updated successfully") : alert("There was an error updating your details");
+            }
+        })
+    })
+
+
+    $("#update_payments").submit(function (e) {
+        e.preventDefault()
+        const url = $(this).attr("action")
+        const data = $(this).serialize()
+        $.ajax({
+            url:url,
+            type: $(this).attr("method"),
+            dataType:"json",
+            data:data,
+            success: function (res) {
+                res.success ? alert("Your user details have been updated successfully") : alert("There was an error updating your details");
+            }
+        })
+    })
+
+
+    $("#password_form").submit(function (e) {
+        e.preventDefault()
+        const url = $(this).attr("action")
+        const data = $(this).serialize()
+        $.ajax({
+            url:url,
+            type: $(this).attr("method"),
+            dataType:"json",
+            data:data,
+            success: function (res) {
+                res.status ? window.location.href = "/" : alert(res.error);
+            }
+        })
+    })
+
+
+    $("#deleteBtn").click(function (e) {
+        e.preventDefault()
+        var alrt = confirm("Are you sure you want to perform this action?")
+        if (alrt != false){
+            var url = $("#deleteBtn").data("url")
+            $.ajax({
+                url:url,
+                type:'get',
+                dataType: 'json',
+                success:function (res) {
+                    if (res.code){
+                        alert(res.message)
+                        window.location.href = '/'
+                    }
+                }
+            })
+        }
+    })
+
+    $("#deactivate").click(function (e) {
+        e.preventDefault()
+        var alrt = confirm("Are you sure you want to perform this action?")
+        if (alrt != false){
+            var url = $("#deactivate").data("url")
+            $.ajax({
+                url:url,
+                type:'get',
+                dataType: 'json',
+                success:function (res) {
+                    if (res.code){
+                        alert(res.message)
+                        window.location.href = '/'
+                    }
+                }
+            })
+        }
+    })
+
+
+
+    $("#imageField").change(function (e) {
+        $('#uploadFile').trigger("submit")
+    })
+
+
+
+
+
+    </script>
+{% endblock homescripts %}

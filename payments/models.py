@@ -17,12 +17,16 @@ class Profile(models.Model):
     dp = models.ImageField(upload_to="users", blank=True, null=True)
     address = models.CharField(max_length=100, blank=True, null=True, help_text="What is your neighbourhood, please first look at what other people have added")
     account_bank = models.CharField("This should be MPS", blank=True, null=True, max_length=4, default="MPS")
-    account_number = PhoneNumberField("Phone number", help_text="Should be phone number not back account number as mobile money is being used", blank=True, null=True)
+    account_number = models.CharField("Phone number", max_length=14, help_text="Should be phone number not back account number as mobile money is being used", blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     currency = models.CharField(default='UGX', max_length=4)
 
     def __str__(self):
         return  self.user.get_full_name()
+
+    @property
+    def default_total(self):
+        return "UGX."+str(self.units * 550)
 
 class PaymentOut(models.Model):
     """
@@ -38,16 +42,35 @@ class PaymentOut(models.Model):
         }
     """
     amount = models.IntegerField()
-    narration = models.TextField(max_length=400)
+    narration = models.CharField(max_length=200)
     reference = models.CharField(unique=True, max_length=50)
     beneficiary = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    units = models.IntegerField()
+    units = models.FloatField()
     status = models.CharField(max_length=100, blank=True, null=True)
     message = models.CharField(max_length=100, blank=True, null=True)
     placed_on = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return  self.beneficiary.user.get_full_name()
+
+class PayIn(models.Model):
+    """
+        Shows what one has paid for.
+    """
+    status = models.CharField(max_length=100, null=True, blank=True)
+    transaction_id = models.CharField(max_length=15, null=True, blank=True)
+    tx_ref = models.CharField(max_length=100, blank=True)
+    flw_ref = models.CharField(max_length=100, blank=True)
+    amount = models.CharField(max_length=10, blank=True)
+    units = models.IntegerField(default=0)
+    pay_to = models.ForeignKey(User, on_delete=models.CASCADE)
+    pay_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="innitiator")
+
+    def __str__(self):
+        return self.pay_by.get_full_name()
+
+
+
 """
 paying out
 {

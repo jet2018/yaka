@@ -1,0 +1,85 @@
+{% extends 'pages/home.html' %}
+{% block home %}
+    <div class="row">
+    <div class="col-lg-12">
+        <section class="panel">
+            <header class="panel-heading tab-bg-info text-success">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" href="#earnings">
+                            <i class="icon-home"></i> Your earnings
+                        </a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#transactions">
+                            <i class="icon-home"></i> Your transactions
+                        </a>
+                    </li>
+                </ul>
+            </header>
+            <div class="panel-body" style="background-color: darkblue">
+                <div class="tab-content">
+                    <div id="earnings" class="tab-pane active">
+
+                    <table class="table table-advance table-inbox">
+    <h5>Your Earnings</h5>
+    <thead>
+        <th>Status</th>
+         <th>Amount</th>
+        <th>Units</th>
+        <th>Paid to</th>
+    </thead>
+    <tbody>
+    {% for tranfer in expinditures %}
+    <tr>
+        <td>{{ tranfer.status }}</td>
+        <td>{{ tranfer.amount }}</td>
+        <td>{{ tranfer.units }}</td>
+        <td>{{ tranfer.pay_to.get_full_name }}</td>
+    </tr>
+     {% empty %}
+        <div>No transactions have been made to you</div>
+    {% endfor %}
+    </tbody>
+    </table>
+                    </div>
+
+                    <div id="transactions" class="tab-pane">
+     <table class="table table-advance table-inbox">
+    <h5>Tranfers to you</h5>
+    <thead>
+        <th>Amount</th>
+        <th>Narration</th>
+        <th>Reference</th>
+        <th>Units</th>
+        <th>Status</th>
+        <th>Message</th>
+        <th>Transfer on</th>
+    </thead>
+    <tbody>
+    {% for tranfer in earnings %}
+    <tr>
+        <td>{{ tranfer.amount }}</td>
+        <td>{{ tranfer.narration }}</td>
+        <td>{{ tranfer.refernce }}</td>
+        <td>{{ tranfer.units }}</td>
+        <td>{{ tranfer.status }}</td>
+        <td>{{ tranfer.message }}</td>
+        <td>{{ tranfer.placed_on }}</td>
+    </tr>
+     {% empty %}
+        <div>No transfers have been made to you</div>
+    {% endfor %}
+
+
+    </tbody>
+    </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+{% endblock %}
+
